@@ -39,7 +39,7 @@ DESCRIBE_UNSUPPORTED = "%(describe"
 DEFAULT_DESCRIBE = [
     "git",
     "describe",
-    "--dirty",
+    "--dirty=-dirty",
     "--tags",
     "--long",
     "--match",
@@ -61,6 +61,8 @@ class GitWorkdir(Workdir):
         wd = Path(wd).resolve()
         real_wd = run_git(["rev-parse", "--show-prefix"], wd).parse_success(parse=str)
         if real_wd is None:
+            if os.path.exists(os.path.join(wd, ".git", "config)):
+                return cls(Path(wd))
             return None
         else:
             real_wd = real_wd[:-1]  # remove the trailing pathsep
@@ -101,6 +103,12 @@ class GitWorkdir(Workdir):
         ).parse_success(
             parse=str,
             error_msg="branch err (symbolic-ref)",
+        ) or run_git(
+            ["rev-parse", "HEAD"],
+            self.path,
+        ).parse_success(
+            parse=str,
+            error_msg="branch err (rev-parse)",
         )
 
     def get_head_date(self) -> date | None:
@@ -110,17 +118,35 @@ class GitWorkdir(Workdir):
                 return None
             return datetime.fromisoformat(timestamp_text).date()
 
-        res = run_git(
+        def parse_unformatted(text: str) -> date | None:
+            try:
+                from dateutil.parser import parse, ParserError
+            except ImportError:
+                return None
+            for line in text.split('\n'):
+                try:
+                    return parse(line)
+                except ParserError:
+                    pass
+            return None
+
+        return run_git(
             [
                 *("-c", "log.showSignature=false"),
-                *("log", "-n", "1", "HEAD"),
+                *("log", "--max-count=1", "HEAD"),
                 "--format=%cI",
             ],
             self.path,
-        )
-        return res.parse_success(
+        ).parse_success(
             parse=parse_timestamp,
             error_msg="logging the iso date for head failed",
+            default=None,
+        ) or run_git(
+            ["log", "--max-count=1"]
+            self.path,
+        ).parse_success(
+            parse=parse_unformatted,
+            error_msg="paraing the iso date for head failed",
             default=None,
         )
 
