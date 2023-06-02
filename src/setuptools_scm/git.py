@@ -61,7 +61,7 @@ class GitWorkdir(Workdir):
         wd = Path(wd).resolve()
         real_wd = run_git(["rev-parse", "--show-prefix"], wd).parse_success(parse=str)
         if real_wd is None:
-            if os.path.exists(os.path.join(wd, ".git", "config)):
+            if os.path.exists(os.path.join(wd, ".git", "config")):
                 return cls(Path(wd))
             return None
         else:
