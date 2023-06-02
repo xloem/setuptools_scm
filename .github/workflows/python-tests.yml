@@ -86,7 +86,7 @@ jobs:
       - name: Setup libgit2
         if: matrix.git == 'libgit2'
         run: |
-          sudo apt-get install -y build-ninja &
+          sudo apt-get install -y ninja-build &
           git clone --branch v${{matrix.git_version}} --depth 1 https://github.com/libgit2/libgit2
           cd libgit2
           mkdir build
