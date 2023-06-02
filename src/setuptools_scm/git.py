@@ -142,7 +142,7 @@ class GitWorkdir(Workdir):
             error_msg="logging the iso date for head failed",
             default=None,
         ) or run_git(
-            ["log", "--max-count=1"]
+            ["log", "--max-count=1"],
             self.path,
         ).parse_success(
             parse=parse_unformatted,
