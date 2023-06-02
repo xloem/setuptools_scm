@@ -87,7 +87,7 @@ jobs:
         if: matrix.git == 'libgit2'
         run: |
           git clone https://github.com/libgit2/libgit2
-          apt-get remove -y git
+          sudo apt-get remove -y git
           cd libgit2
           git checkout v${{matrix.git_version}}
           mkdir build
