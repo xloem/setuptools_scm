@@ -89,7 +89,7 @@ jobs:
           git clone https://github.com/libgit2/libgit2
           apt-get remove -y git
           cd libgit2
-          git checkout v${{git_version}}
+          git checkout v${{os.git_version}}
           mkdir build
           cd build
           cmake .. -GNinja -DBUILD_EXAMPLES=ON
