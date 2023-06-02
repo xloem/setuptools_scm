@@ -34,15 +34,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python_version: ['3.7', '3.8', '3.9', '3.10', '3.11.0-alpha - 3.11.0', 'pypy-3.8' ]
-        os: [windows-latest, ubuntu-latest] #, macos-latest]
-        git: ['git']
-        include:
-        - os: windows-latest
-          python_version: 'msys2'
+        #python_version: ['3.7', '3.8', '3.9', '3.10', '3.11.0-alpha - 3.11.0', 'pypy-3.8' ]
+        #os: [windows-latest, ubuntu-latest] #, macos-latest]
+        #git: ['git']
+        #include:
+        #- os: windows-latest
+        #  python_version: 'msys2'
         - os: ubuntu-latest
-          git: ['libgit2']
-          git_version: ['1.1.0']
+          git: 'libgit2'
+          git_version: '1.1.0'
 
     name: ${{ matrix.os }} - Python ${{ matrix.python_version }} - ${{ matrix.git }}
     steps:
