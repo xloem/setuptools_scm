@@ -92,7 +92,7 @@ jobs:
           mkdir build
           cd build
           wait
-          sudo apt-get remove -y git $
+          sudo apt-get remove -y git &
           cmake .. -GNinja -DBUILD_EXAMPLES=ON
           cmake --build .
           wait
