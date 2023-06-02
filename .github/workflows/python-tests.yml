@@ -87,13 +87,13 @@ jobs:
         if: matrix.git == 'libgit2'
         run: |
           git clone https://github.com/libgit2/libgit2
-          sudo apt-get remove -y git
           cd libgit2
           git checkout v${{matrix.git_version}}
           mkdir build
           cd build
           cmake .. -GNinja -DBUILD_EXAMPLES=ON
           cmake --build .
+          sudo apt-get remove -y git
           ln -s $(pwd)/examples/lg2 /usr/local/bin/git
       - run: pip install -U 'setuptools>=61'
       - uses: actions/download-artifact@v3
