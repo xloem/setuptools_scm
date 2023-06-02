@@ -86,14 +86,16 @@ jobs:
       - name: Setup libgit2
         if: matrix.git == 'libgit2'
         run: |
-          git clone https://github.com/libgit2/libgit2
+          sudo apt-get install -y ninja &
+          git clone --branch v${{matrix.git_version}} --depth 1 https://github.com/libgit2/libgit2
           cd libgit2
-          git checkout v${{matrix.git_version}}
           mkdir build
           cd build
+          wait
+          sudo apt-get remove -y git $
           cmake .. -GNinja -DBUILD_EXAMPLES=ON
           cmake --build .
-          sudo apt-get remove -y git
+          wait
           ln -s $(pwd)/examples/lg2 /usr/local/bin/git
       - run: pip install -U 'setuptools>=61'
       - uses: actions/download-artifact@v3
